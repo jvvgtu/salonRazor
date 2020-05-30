@@ -22,6 +22,17 @@
 <div class="container">
     <form asp-page="./SearchServices" method="get">
         <div class="form-group row">
+            @* //couldnt complete this part with ef core
+            <div class="col-xs-2" style="padding-right:5px;">
+                <span class="d-inline-block align-middle">Ieškok pagal pavadimą:</span>
+            </div>
+            <div class="col-xs-1" style="padding-right:5px">
+                <input value="@Model.CurrentFilterServiceName" name="SearchServiceName" class="form-control" type="text" autocomplete="off" />
+            </div>
+            <div class="col-xs-1" style="padding-right:5px;">
+                <span class="d-inline-block align-middle"><i>ir/ar</i> kategoriją</span>
+            </div>
+                *@
             <div class="col-xs-2" style="padding-right:5px;">
                 <span class="d-inline-block align-middle">Ieškok pagal kategoriją:</span>
             </div>
@@ -30,7 +41,7 @@
                     <option value="">Visi</option>
                 </select>
             </div>
-            <div class="col-xs-2" style="padding-right:5px;">
+            <div class="col-xs-1" style="padding-right:5px;">
                 <span class="d-inline-block align-middle"><i>ir/ar</i> miestą</span>
             </div>
             <div class="col-xs-2" style="padding-right:5px">
@@ -38,7 +49,7 @@
                     <option value="">Visi</option>
                 </select>
             </div>
-            <div class="col-xs-2" style="padding-right:5px;">
+            <div class="col-xs-1" style="padding-right:5px;">
                 <span class="d-inline-block align-middle"><i>ir/ar</i> datą</span>
             </div>
             <div class="col-xs-1" style="padding-right:5px">
@@ -47,7 +58,6 @@
                 }
             </div>
             <div class="col-xs-2" style="padding-right:5px">
-
                 <button type="submit" class="btn btn-outline-primary">
                     <i class="glyphicon glyphicon-search"></i> Ieškoti
                 </button>
@@ -200,6 +210,7 @@
                asp-route-currentFilterCategory="@Model.CurrentFilterCategory"
                asp-route-currentFilterCity="@Model.CurrentFilterCity"
                asp-route-currentFilterDate="@Model.CurrentFilterDate"
+               asp-route-currentFilterServiceName="@Model.CurrentFilterServiceName"
                class="page-link">
                 Praeitas
             </a>
@@ -209,6 +220,7 @@
                asp-route-pageIndex="@(Model.Salon.PageIndex + 1)"
                asp-route-currentFilter="@Model.CurrentFilterCategory"
                asp-route-currentFilterDate="@Model.CurrentFilterDate"
+               asp-route-currentFilterServiceName="@Model.CurrentFilterServiceName"
                class="page-link">
                 Kitas
             </a>

@@ -64,7 +64,7 @@ namespace SalonWithRazor.Areas.Identity.Pages.Account.Manage
             }
             var user = await _userManager.GetUserAsync(User);
             EmployeeAppealSalon.EmployeeId = user.Id;
-
+            EmployeeAppealSalon.CreatedDate = DateTime.Now;
             _context.EmployeeAppealSalons.Add(EmployeeAppealSalon);
 
             await _context.SaveChangesAsync();

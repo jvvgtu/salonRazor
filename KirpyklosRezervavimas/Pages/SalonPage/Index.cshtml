@@ -119,9 +119,9 @@
                                         <tbody>
                                             @foreach (var serviceJobTitle in service.ServiceJobTitle)
                                             {
-                                                <tr>
-                                                    @foreach (var employee in serviceJobTitle.JobTitle.Employee.Distinct())
-                                                    {
+                                                @foreach (var employee in serviceJobTitle.JobTitle.Employee.Distinct())
+                                                {
+                                                    <tr>
                                                         <td style="width: 20%;">
                                                         </td>
                                                         <td style="text-align:left; width: 40%;">
@@ -144,9 +144,8 @@
                                                                 <a class="btn btn-outline-secondary btn-sm" asp-page="/MakeReservation/Create" asp-route-cityId="@Model.Salon.CityId" asp-route-salonId="@Model.Salon.Id" asp-route-employeeId="@employee.Id" asp-route-serviceId1="@service.Id" asp-page-handler="FromSalonPage">Prisijunkite</a>
                                                             </td>
                                                         }
-
-                                                    }
-                                                </tr>
+                                                    </tr>
+                                                }
                                             }
 
                                         </tbody>
@@ -277,8 +276,7 @@
         function DisplayGoogleMap() {
 
             //Set the Latitude and Longitude of the Map
-            var myAddress = new google.maps.LatLng(@Model.Salon.Latitude, @Model.Salon.Longitude);
-
+            var myAddress = new google.maps.LatLng(@Model.Salon.Latitude.ToString().Replace(',','.'), @Model.Salon.Longitude.ToString().Replace(',', '.'));
             //Create Options or set different Characteristics of Google Map
             var mapOptions = {
                 center: myAddress,

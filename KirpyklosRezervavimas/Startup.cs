@@ -9,6 +9,10 @@ using SalonWithRazor.Data;
 using SalonWithRazor.Models;
 using SalonWithRazor.ServiceModels;
 using SalonWithRazor.Interfaces;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+using System.Globalization;
+using System.Collections.Generic;
 
 namespace SalonWithRazor
 {
@@ -35,24 +39,31 @@ namespace SalonWithRazor
             });
 
             services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
+
             services.Configure<IISServerOptions>(options =>
             {
                 options.AllowSynchronousIO = true;
             });
+
+            services.Configure<KestrelServerOptions>(options =>
+            {
+                options.AllowSynchronousIO = true;
+            });
+
             services.AddRazorPages()
                 .AddRazorRuntimeCompilation()
-    .AddRazorPagesOptions(options =>
-    {
-        options.Conventions.AuthorizeFolder("/MakeReservation", "RequireClientRole");
-        options.Conventions.AuthorizeFolder("/CheckReservation", "RequireEmployeeRole");
-        options.Conventions.AuthorizeAreaPage("Identity", "/Account/Manage/EmployeeAppealToSalon", "RequireEmployeeRole");
-        options.Conventions.AuthorizeAreaPage("Identity", "/Account/Manage/TwoFactorAuthentication", "RequireBlockedPageRole");
-        options.Conventions.AuthorizeAreaPage("Identity", "/Account/Manage/PersonalData", "RequireBlockedPageRole");
-    });
+                .AddRazorPagesOptions(options =>
+                {
+                    options.Conventions.AuthorizeFolder("/MakeReservation", "RequireClientRole");
+                    options.Conventions.AuthorizeFolder("/CheckReservation", "RequireEmployeeRole");
+                    options.Conventions.AuthorizeAreaPage("Identity", "/Account/Manage/EmployeeAppealToSalon", "RequireEmployeeRole");
+                    options.Conventions.AuthorizeAreaPage("Identity", "/Account/Manage/TwoFactorAuthentication", "RequireBlockedPageRole");
+                    options.Conventions.AuthorizeAreaPage("Identity", "/Account/Manage/PersonalData", "RequireBlockedPageRole");
+                });
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                    Configuration.GetConnectionString("DefaultConnectionProd")));
 
             services.AddScoped<IUserClaimsPrincipalFactory<AppUser>,
                     UserClaimsPrincipalFactory<AppUser, AppRole>>();
@@ -82,16 +93,27 @@ namespace SalonWithRazor
 
             services.AddTransient<IMakeReservationCategory, MakeReservationCategory>();
 
+            services.Configure<MessageSenderOptions>(Configuration.GetSection("Email"));
+            services.AddTransient<IEmailSender, EmailService>();
 
             services.AddControllers().AddNewtonsoftJson(options =>
-options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-);
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                );
+
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                options.DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture("lt-LT");
+                options.SupportedCultures = new List<CultureInfo> { new CultureInfo("lt-LT") };
+                options.RequestCultureProviders.Clear();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseStatusCodePagesWithRedirects("/Error");
+            app.UseRequestLocalization();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

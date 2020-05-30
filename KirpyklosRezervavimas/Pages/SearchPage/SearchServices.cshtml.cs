@@ -24,13 +24,15 @@ namespace SalonWithRazor.Pages.SearchPage
         public int CurrentFilterCity { get; set; }
         [Display(Name = "Data")]
         public DateTime? CurrentFilterDate { get; set; }
+        [Display(Name = "Paslaugos pavadinimas")]
+        public string CurrentFilterServiceName { get; set; }
         public PaginatedList<Salon> Salon { get; set; }
 
 
-        public async Task OnGetAsync(int currentFilterCategory, int currentFilterCity, DateTime currentFilterDate, int searchServiceCategory, int searchCityInt, DateTime searchDateDT, int? pageIndex)
+        public async Task OnGetAsync(int currentFilterCategory, int currentFilterCity, DateTime currentFilterDate, string currentFilterServiceName, int searchServiceCategory, int searchCityInt, DateTime searchDateDT, string searchServiceName, int? pageIndex)
         {
 
-            if (!Tools.Comparer.IsDefaultValue(searchServiceCategory)  || !Tools.Comparer.IsDefaultValue(searchCityInt) || !Tools.Comparer.IsDefaultValue(searchDateDT))
+            if (!Tools.Comparer.IsDefaultValue(searchServiceCategory) || !Tools.Comparer.IsDefaultValue(searchCityInt) || !Tools.Comparer.IsDefaultValue(searchDateDT) || !String.IsNullOrEmpty(searchServiceName))
             {
                 pageIndex = 1;
             }
@@ -39,20 +41,22 @@ namespace SalonWithRazor.Pages.SearchPage
                 searchServiceCategory = currentFilterCategory;
                 searchCityInt = currentFilterCity;
                 searchDateDT = currentFilterDate;
+                searchServiceName = currentFilterServiceName;
             }
             CurrentFilterCategory = searchServiceCategory;
             CurrentFilterCity = searchCityInt;
             CurrentFilterDate = searchDateDT;
+            CurrentFilterServiceName = searchServiceName;
 
-            ViewData["Cities"] = new SelectList(_context.Cities.Where(r => r.Salon.Any()).OrderBy(r=>r.Id), nameof(City.Id), nameof(City.Name), CurrentFilterCity);
-            ViewData["ServiceCategories"] = new SelectList(_context.Services.Include(r=>r.ServiceCategory).
-                Where(r => r.ServiceCategory.Id != 0).Select(r=> new { r.ServiceCategory.Id, r.ServiceCategory.Name}).Distinct().OrderBy(r => r.Name),
+            ViewData["Cities"] = new SelectList(_context.Cities.Where(r => r.Salon.Any()).OrderBy(r => r.Id), nameof(City.Id), nameof(City.Name), CurrentFilterCity);
+            ViewData["ServiceCategories"] = new SelectList(_context.Services.Include(r => r.ServiceCategory).
+                Where(r => r.ServiceCategory.Id != 0).Select(r => new { r.ServiceCategory.Id, r.ServiceCategory.Name }).Distinct().OrderBy(r => r.Name),
                 nameof(ServiceCategory.Id), nameof(ServiceCategory.Name), CurrentFilterCategory);
 
             IQueryable<Salon> salonIQ = _context.Salons
                     .Include(r => r.City)
                     .Include(r => r.Service
-                        .Where(e=>e.Active && e.ServiceJobTitle.Select(e=>e.JobTitle).Select(e=>e.Employee).Any()))
+                        .Where(e => e.Active && e.ServiceJobTitle.Select(e => e.JobTitle).Select(e => e.Employee).Any()))
                         .ThenInclude(r => r.ServiceCategory)
                 .Include(r => r.Service)
                     .ThenInclude(r => r.ServiceJobTitle)
@@ -83,6 +87,11 @@ namespace SalonWithRazor.Pages.SearchPage
                 //works during given date week day
                 var currentDay = (byte)searchDateDT.DayOfWeek;
                 salonIQ = salonIQ.Where(r => r.SalonSchedule.Where(s => s.Day == currentDay && s.StartTime != s.EndTime).Select(e => e.SalonId).Contains(r.Id));
+            }
+
+            if (!String.IsNullOrEmpty(searchServiceName))
+            {
+                //salonIQ = salonIQ.Where(r => r.Service.Select(r => r.Name).Contains(searchServiceName));
             }
 
             int pageSize = 10;

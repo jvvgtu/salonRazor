@@ -66,7 +66,7 @@ namespace SalonWithRazor
 
             if (Reservation.Status.Id == 4)
             {
-                var notification = new Notification(Reservation.EmployeeId, $"/MakeReservation/Details?id={Reservation.Id}", (NotiflicationType)0, Reservation.Status.Id);
+                var notification = new Notification(Reservation.EmployeeId, $"/CheckReservation/Details?id={Reservation.Id}", (NotiflicationType)0, Reservation.Status.Id);
                 _context.Add(notification);
             }
 

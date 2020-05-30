@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace SalonWithRazor.Areas.Identity.Pages.Account.Manage
 {
+    [Authorize(Roles = "BlockedPage")]
     public class DeletePersonalDataModel : PageModel
     {
         private readonly UserManager<IdentityUser> _userManager;

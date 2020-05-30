@@ -59,7 +59,7 @@ namespace SalonWithRazor.Areas.Identity.Pages.Account
 
                 await _emailSender.SendEmailAsync(
                     Input.Email,
-                    "Reset Password",
+                    "Atstatyti slaptažodį",
                     $"Iš naujo nustatykite slaptažodį <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>spustelėdami čia</a>.");
 
                 return RedirectToPage("./ForgotPasswordConfirmation");

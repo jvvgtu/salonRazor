@@ -9,9 +9,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SalonWithRazor.Areas.Identity.Pages.Account.Manage
 {
+    [Authorize(Roles = "BlockedPage")]
     public class DownloadPersonalDataModel : PageModel
     {
         private readonly UserManager<AppUser> _userManager;

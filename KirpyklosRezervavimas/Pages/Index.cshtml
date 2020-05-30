@@ -1,7 +1,7 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Namai";
 }
 <link href="~/css/one-page-wonder.min.css" rel="stylesheet" />
 
@@ -13,7 +13,7 @@
                     <h1 class="masthead-heading mb-0 text-white">One Page Wonder</h1>
                     <h2 class="masthead-subheading mb-0 text-white text-center">Will Rock Your Socks Off</h2>
                 *@
-                <div class="col-4" style="padding-left: 30px;">
+                <div class="col-5" style="padding-left: 30px;">
                     <div style="max-width: 350px; min-width: 350px; min-height: 280px; max-height: 280px;">
                         <div class="card ">
                             <div class="card-header nav-justified" style="padding: .75rem .57rem; padding-top: 0px;">
@@ -110,7 +110,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col d-none d-sm-block  text-lg-center text-md-right text-sm-right">
+                <div class="col d-none d-md-inline-block text-center text-md-right text-sm-right">
                     <h3 class="masthead-heading mb-0 text-white">Rezervuokis</h3>
                     <h4 class="masthead-subheading mb-0 text-white">dabar!</h4>
                 </div>
@@ -122,6 +122,17 @@
     <div class="bg-circle-3 bg-circle"></div>
     <div class="bg-circle-4 bg-circle"></div>
 </header>
+
+@{
+    if (!Model.IsEmailConfirmed)
+    {
+        <br>
+        <div class="bs-callout bs-callout-info text-center">
+            <h4 class="alert-heading">Nepatvirtintas el.paštas!</h4>
+            <p>Patvirtinimo laiškas buvo išsiųstas. Nepatvirtintos paskyros negali atstatyti slaptažodžio ir keisti el. pašto.</p>
+        </div>
+    }
+}
 
 @{
     if (User.IsInRole("Employee") && !Model.EmployeeSalonId.HasValue)

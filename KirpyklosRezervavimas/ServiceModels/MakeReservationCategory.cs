@@ -28,11 +28,11 @@ namespace SalonWithRazor.ServiceModels
         {
             if (Tools.Comparer.IsDefaultValue(cityId))
             {
-                return _context.Salons.Include(r=>r.Employee).Where(r=>r.Employee.Any()).ToList();
+                return _context.Salons.Include(r=>r.City).Include(r=>r.Employee).Where(r=>r.Employee.Any()).ToList();
             }
             else
             {
-                return _context.Salons.Include(r => r.Employee).Where(r => r.Employee.Any()).Where(s => s.CityId == cityId).ToList();
+                return _context.Salons.Include(r => r.City).Include(r => r.Employee).Where(r => r.Employee.Any()).Where(s => s.CityId == cityId).ToList();
             }
         }
 

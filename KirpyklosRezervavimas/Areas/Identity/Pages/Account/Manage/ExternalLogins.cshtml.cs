@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace SalonWithRazor.Areas.Identity.Pages.Account.Manage
 {
+    [Authorize(Roles = "BlockedPage")]
     public class ExternalLoginsModel : PageModel
     {
         private readonly UserManager<IdentityUser> _userManager;

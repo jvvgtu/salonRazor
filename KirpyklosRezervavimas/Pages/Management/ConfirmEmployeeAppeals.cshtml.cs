@@ -57,7 +57,7 @@ namespace SalonWithRazor.Pages.Management
         {
             if (id == null)
             {
-                StatusMessage="Error: Prašymas nerastas";
+                StatusMessage = "Error: Prašymas nerastas";
                 return Page();
             }
 
@@ -92,6 +92,15 @@ namespace SalonWithRazor.Pages.Management
             _context.EmployeeAppealSalons.RemoveRange(employeeAppealSalons);
             user.Salon = salon;
 
+            await _context.EmployeeSchedules.Where(r => r.EmployeeId == user.Id).ForEachAsync(day =>
+            {
+                day.StartTime = new TimeSpan(0, 0, 0);
+                day.EndTime = new TimeSpan(0, 0, 0);
+                day.BreakStartTime = new TimeSpan(0, 0, 0);
+                day.BreakEndTime = new TimeSpan(0, 0, 0);
+                day.IsTakingBreak = false;
+                day.IsWorking = false;
+            });
             await _context.SaveChangesAsync();
 
 

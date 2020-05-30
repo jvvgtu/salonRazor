@@ -10,9 +10,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SalonWithRazor.Areas.Identity.Pages.Account.Manage
 {
+    [Authorize(Roles = "BlockedPage")]
     public class EnableAuthenticatorModel : PageModel
     {
         private readonly UserManager<IdentityUser> _userManager;

@@ -9,15 +9,16 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using SalonWithRazor.Models;
 
 namespace SalonWithRazor.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class ResetPasswordModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<AppUser> _userManager;
 
-        public ResetPasswordModel(UserManager<IdentityUser> userManager)
+        public ResetPasswordModel(UserManager<AppUser> userManager)
         {
             _userManager = userManager;
         }
@@ -29,6 +30,7 @@ namespace SalonWithRazor.Areas.Identity.Pages.Account
         {
             [Required]
             [EmailAddress]
+            [Display(Name = "El.paštas")]
             public string Email { get; set; }
 
             [Required]

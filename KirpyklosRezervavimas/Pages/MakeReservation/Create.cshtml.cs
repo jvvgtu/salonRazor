@@ -41,6 +41,7 @@ namespace SalonWithRazor
         [BindProperty(SupportsGet = true)]
         public int EmployeeId { get; set; }
         [BindProperty(SupportsGet = true)]
+        [Display(Name = "Paslauga (pirma)")]
         public int ServiceId1 { get; set; }
         [BindProperty(SupportsGet = true)]
         public int ServiceId2 { get; set; }
@@ -50,7 +51,7 @@ namespace SalonWithRazor
         public IActionResult OnGet()
         {
             ViewData["Cities"] = new SelectList(_categoryService.GetCities(), nameof(City.Id), nameof(City.Name));
-            ViewData["Salons"] = new SelectList(_categoryService.GetSalons(0), nameof(Salon.Id), nameof(Salon.FullName));
+            ViewData["Salons"] = new SelectList(_categoryService.GetSalons(0).Select(r => new { r.Id, FullName = r.Name + " (" + r.Address + ")", r.City.Name }), nameof(Models.Salon.Id), nameof(Models.Salon.FullName), null, nameof(Models.Salon.City.Name));
             ViewData["EmployeeId"] = new SelectList(_categoryService.GetEmployees(0), nameof(Employee.Id), nameof(Employee.FullName));
             ViewData["ServiceName"] = new SelectList(_categoryService.GetServices(0), nameof(Service.Id), nameof(Service.FullName));
             ViewData["ServiceName2"] = new SelectList(_categoryService.GetServices2(0, 0), nameof(Service.Id), nameof(Service.FullName));
@@ -154,7 +155,7 @@ namespace SalonWithRazor
             if (!ModelState.IsValid || StartTime.Value.Minutes%15!=0)
             {
                 ViewData["Cities"] = new SelectList(_categoryService.GetCities(), nameof(City.Id), nameof(City.Name));
-                ViewData["Salons"] = new SelectList(_categoryService.GetSalons(CityId), nameof(Salon.Id), nameof(Salon.FullName));
+                ViewData["Salons"] = new SelectList(_categoryService.GetSalons(CityId).Select(r => new { r.Id, FullName = r.Name + " (" + r.Address + ")", r.City.Name }), nameof(Models.Salon.Id), nameof(Models.Salon.FullName), null, nameof(Models.Salon.City.Name));
                 ViewData["EmployeeId"] = new SelectList(_categoryService.GetEmployees(SalonId), nameof(Employee.Id), nameof(Employee.FullName));
                 ViewData["ServiceName"] = new SelectList(_categoryService.GetServices(Reservation.EmployeeId), nameof(Service.Id), nameof(Service.FullName));
                 ViewData["ServiceName2"] = new SelectList(_categoryService.GetServices2(Reservation.EmployeeId, ServiceId1), nameof(Service.Id), nameof(Service.FullName));
@@ -216,7 +217,7 @@ namespace SalonWithRazor
             else
             {
                 ViewData["Cities"] = new SelectList(_categoryService.GetCities(), nameof(City.Id), nameof(City.Name));
-                ViewData["Salons"] = new SelectList(_categoryService.GetSalons(CityId), nameof(Salon.Id), nameof(Salon.FullName));
+                ViewData["Salons"] = new SelectList(_categoryService.GetSalons(CityId), nameof(Models.Salon.Id), nameof(Models.Salon.FullName), null, nameof(Models.Salon.City.Name));
                 ViewData["EmployeeId"] = new SelectList(_categoryService.GetEmployees(SalonId), nameof(Employee.Id), nameof(Employee.FullName));
                 ViewData["ServiceName"] = new SelectList(_categoryService.GetServices(Reservation.EmployeeId), nameof(Service.Id), nameof(Service.FullName));
                 ViewData["ServiceName2"] = new SelectList(_categoryService.GetServices2(Reservation.EmployeeId, ServiceId1), nameof(Service.Id), nameof(Service.FullName));

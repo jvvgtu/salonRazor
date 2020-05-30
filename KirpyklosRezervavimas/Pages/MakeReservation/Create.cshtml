@@ -47,7 +47,7 @@
                     <select id="service1" asp-for="ServiceId1" class="form-control flex-fill mr-2 custom-select" placeholder="Pasirinkite paslaugą..." asp-items="ViewBag.ServiceName" onchange="callAjaxTimes();">
                         <option value="">Pasirinkite paslaugą...</option>
                     </select>
-                    <span asp-validation-for="ServiceReservation.ServiceId" class="text-danger"></span>
+                    <span asp-validation-for="ServiceId1" class="text-danger"></span>
                 </div>
                 <span id="toogleIcon1" class="glyphicon glyphicon-plus btn btn-primary btn-sm"></span>
             </div>
@@ -158,7 +158,7 @@
                             Sukurti rezervaciją pas <b id="confirmationModelEmployee"></b> <br> laiku <b id="confirmationModelTime"></b> ?
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">Sukurti</button>
+                            <button type="submit" class="btn btn-primary" onclick="">Sukurti</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Ne</button>
                         </div>
                     </div>
@@ -385,7 +385,7 @@
                         var tr = $('<tr class="tableWithHiddenHeaderBody"></tr>');
                         $.each(val, function (k, v) {
                             if (v != null) {
-                                $('<td>' + '<button type="button" class="btn btn-outline-success" style="width:100%" onclick="this.blur();">' + v + '</td>').appendTo(tr);
+                                $('<td>' + '<button type="button" class="btn btn-outline-success" style="width:100%; padding: .375rem .0rem;" onclick="this.blur();">' + v + '</td>').appendTo(tr);
                             } else { $('<td>' + '</td>').appendTo(tr); }
                         });
                         tr.appendTo('#tableWithHiddenHeader');

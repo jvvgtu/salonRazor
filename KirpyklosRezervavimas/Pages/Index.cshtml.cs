@@ -30,6 +30,7 @@ namespace SalonWithRazor.Pages
 
         public IList<Reservation> Reservation { get; set; }
         public int? EmployeeSalonId { get; private set; }
+        public bool IsEmailConfirmed { get; set; } = true;
         public async Task<IActionResult> OnGetAsync()
         {
             ViewData["Cities"] = new SelectList(_context.Cities.Where(r => r.Salon.Any()).OrderBy(r => r.Id), nameof(City.Id), nameof(City.Name));
@@ -43,6 +44,12 @@ namespace SalonWithRazor.Pages
                 return Page();
             }
             EmployeeSalonId = await _context.Employees.Where(r => r.Id == user.Id).Select(r => r.SalonId).FirstOrDefaultAsync();
+
+            if (!user.EmailConfirmed)
+            {
+                IsEmailConfirmed = false;
+            }
+
             if (User.IsInRole("Client"))
             {
                 Reservation = await _context.Reservations

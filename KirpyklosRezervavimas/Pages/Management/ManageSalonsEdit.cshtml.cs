@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -83,7 +84,7 @@ namespace SalonWithRazor.Pages.Management
 
             foreach (var day in Salon.SalonSchedule)
             {
-                if(day.EndTime.Value.Minutes%15 != 0 || day.StartTime.Value.Minutes % 15 != 0)
+                if (day.EndTime.Value.Minutes % 15 != 0 || day.StartTime.Value.Minutes % 15 != 0)
                 {
                     StatusMessage = "Error: Minutės gali būti tik 15 min intervalu (0,15,30,45).";
                     return Page();
@@ -103,11 +104,39 @@ namespace SalonWithRazor.Pages.Management
                     return Page();
                 }
             }
+            var employeeSchedule = await _context.EmployeeSchedules.Include(r => r.Employee).Where(r => r.Employee.SalonId == Salon.Id).ToListAsync();
+            List<string> employeeNamesWithSchedulesChanged = new List<string>();
+            foreach (var salonDay in Salon.SalonSchedule)
+            {
+                var takenDayListOfEmployeeSchedules = employeeSchedule.Where(r => r.Day == salonDay.Day);
+
+                foreach (var employeeDay in takenDayListOfEmployeeSchedules)
+                {
+                    bool IsChangeMade = false;
+                    if (employeeDay.StartTime < salonDay.StartTime)
+                    {
+                        employeeDay.StartTime = salonDay.StartTime;
+                        IsChangeMade = true;
+                    }
+                    if (employeeDay.EndTime > salonDay.EndTime)
+                    {
+                        employeeDay.EndTime = salonDay.EndTime;
+                        IsChangeMade = true;
+                    }
+                    if (IsChangeMade)
+                    {
+                        employeeNamesWithSchedulesChanged.Add(employeeDay.Employee.FullName);
+                    }
+                }
+            }
+
             _context.Update(Salon);
             await _context.SaveChangesAsync();
 
-
-            return RedirectToPage("./ManageSalons");
+            StatusMessage = !employeeNamesWithSchedulesChanged.Any() ? "Success: Salono darbo laikas atnaujintas"
+            : $"Success: Salono darbo laikas atnaujintas ir pataisytas darbo laikas šiems darbuotojams: \r\n{String.Join(",", employeeNamesWithSchedulesChanged.Distinct())}";
+            return Page();
+            //return RedirectToPage("./ManageSalons");
         }
 
         private bool SalonExists(int id)

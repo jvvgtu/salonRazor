@@ -8,16 +8,17 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using SalonWithRazor.Models;
 
 namespace SalonWithRazor.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class ConfirmEmailChangeModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
 
-        public ConfirmEmailChangeModel(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public ConfirmEmailChangeModel(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -39,11 +40,11 @@ namespace SalonWithRazor.Areas.Identity.Pages.Account
                 return NotFound($"Neįmanoma rasti vartotojo su ID '{userId}'.");
             }
 
-            code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
+            //code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code)); //removed this because encoded symbols become unrecognisable 
             var result = await _userManager.ChangeEmailAsync(user, email, code);
             if (!result.Succeeded)
             {
-                StatusMessage = "Klaida keičiant el. paštą.";
+                StatusMessage = "Error: Klaida keičiant el. paštą.";
                 return Page();
             }
 
@@ -52,7 +53,7 @@ namespace SalonWithRazor.Areas.Identity.Pages.Account
             var setUserNameResult = await _userManager.SetUserNameAsync(user, email);
             if (!setUserNameResult.Succeeded)
             {
-                StatusMessage = "Klaida keičiant vartotojo vardą.";
+                StatusMessage = "Error: Klaida keičiant vartotojo vardą.";
                 return Page();
             }
 

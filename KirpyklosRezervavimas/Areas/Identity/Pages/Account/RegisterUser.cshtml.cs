@@ -227,7 +227,7 @@ namespace SalonWithRazor.Areas.Identity.Pages.Account
                         protocol: Request.Scheme);
 
                     await _emailSender.SendEmailAsync(Input.Email, "Patvirtinkite savo el. paštą",
-                        $"Patvirtinkite savo sąskaitą <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>spustelėdami čia</a>.");
+                        $"Patvirtinkite savo paskyrą <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>spustelėdami čia</a>.");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {

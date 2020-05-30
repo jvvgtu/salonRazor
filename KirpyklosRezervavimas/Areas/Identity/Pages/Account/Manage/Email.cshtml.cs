@@ -68,7 +68,7 @@ namespace SalonWithRazor.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"Neįmanoma rasti vartotojo su ID '{_userManager.GetUserId(User)}'.");
             }
 
             await LoadAsync(user);
@@ -80,7 +80,7 @@ namespace SalonWithRazor.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"Neįmanoma rasti vartotojo su ID '{_userManager.GetUserId(User)}'.");
             }
 
             if (!ModelState.IsValid)
@@ -101,8 +101,8 @@ namespace SalonWithRazor.Areas.Identity.Pages.Account.Manage
                     protocol: Request.Scheme);
                 await _emailSender.SendEmailAsync(
                     Input.NewEmail,
-                    "Confirm your email",
-                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    "Patvirtinkite savo el. paštą",
+                    $"Patvirtinkite savo paskyrą <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>spustelėdami čia</a>.");
 
                 StatusMessage = "Patvirtinimo nuoroda pakeitimui el. pašto išsiųsta. Prašau, patikrink savo el. paštą.";
                 return RedirectToPage();
@@ -117,7 +117,7 @@ namespace SalonWithRazor.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"Neįmanoma rasti vartotojo su ID '{_userManager.GetUserId(User)}'.");
             }
 
             if (!ModelState.IsValid)
@@ -137,8 +137,8 @@ namespace SalonWithRazor.Areas.Identity.Pages.Account.Manage
                 protocol: Request.Scheme);
             await _emailSender.SendEmailAsync(
                 email,
-                "Confirm your email",
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    "Patvirtinkite savo el. paštą",
+                    $"Patvirtinkite savo paskyrą <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>spustelėdami čia</a>.");
 
             StatusMessage = "Patvirtinimo el. paštas išsiųstas. Prašau, patikrink savo el. paštą";
             return RedirectToPage();

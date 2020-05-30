@@ -35,6 +35,7 @@ namespace SalonWithRazor.Pages.Management
             public int? JobTitleId { get; set; }
             public int SalonId { get; set; }
             public List<EmployeeSchedule> EmployeeSchedule { get; set; }
+            public List<SalonSchedule> SalonSchedule { get; set; }
         }
 
         [BindProperty]
@@ -60,6 +61,8 @@ namespace SalonWithRazor.Pages.Management
             Employee = await _context.Employees
                .Include(e => e.JobTitle)
                .Include(e => e.EmployeeSchedule)
+               .Include(r => r.Salon)
+                .ThenInclude(r => r.SalonSchedule)
                .AsNoTracking()
                .FirstOrDefaultAsync(m => m.Id == id);
 
@@ -73,11 +76,14 @@ namespace SalonWithRazor.Pages.Management
                 FullName = Employee.FullName,
                 JobTitleId = Employee.JobTitleId,
                 SalonId = Employee.SalonId.Value,
-                EmployeeSchedule = Employee.EmployeeSchedule.ToList()
+                EmployeeSchedule = Employee.EmployeeSchedule.ToList(),
+                SalonSchedule = Employee.Salon.SalonSchedule.ToList()
             };
-            if (EmployeeVM.JobTitleId.HasValue) {
+            if (EmployeeVM.JobTitleId.HasValue)
+            {
                 ViewData["JobTitleId"] = new SelectList(_context.JobTitles, "Id", "Name", EmployeeVM.JobTitleId.Value);
-            } else
+            }
+            else
             {
                 ViewData["JobTitleId"] = new SelectList(_context.JobTitles, "Id", "Name");
             }
@@ -144,6 +150,11 @@ namespace SalonWithRazor.Pages.Management
                 if (day.IsTakingBreak && (day.StartTime > day.BreakStartTime || day.EndTime < day.BreakEndTime))
                 {
                     StatusMessage = $"Error: Petraukos laikas nėra tarp darbo laiko. Diena: {Tools.DayToWord.LithuanianDayWord(day.Day)}.";
+                    return Page();
+                }
+                if (day.IsWorking && (day.StartTime < EmployeeVM.SalonSchedule[day.Day.Value - 1].StartTime || day.EndTime > EmployeeVM.SalonSchedule[day.Day.Value - 1].EndTime))
+                {
+                    StatusMessage = $"Error: Darbuotojo darbo laikas nėra tarp salono darbo laiko. Diena: {Tools.DayToWord.LithuanianDayWord(day.Day)}.";
                     return Page();
                 }
             }
